@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="ru" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Влияние стресса на экзамене | Проект</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        heading: ['Montserrat', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#ecfdf5',
+                            100: '#d1fae5',
+                            400: '#34d399',
+                            500: '#10b981',
+                            600: '#059669',
+                            900: '#064e3b',
+                        },
+                        dark: {
+                            800: '#1e293b',
+                            900: '#0f172a',
+                            950: '#020617',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #0f172a;
+            color: #f8fafc;
+            overflow-x: hidden;
+        }
+
+        /* Анимации появления при скролле */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Задержки для элементов в сетке */
+        .delay-100 { transition-delay: 100ms; }
+        .delay-200 { transition-delay: 200ms; }
+        .delay-300 { transition-delay: 300ms; }
+
+        /* Эффект матового стекла (Glassmorphism) */
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Кастомный скроллбар */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #10b981; }
+
+        /* Анимация кругового прогресс-бара */
+        @keyframes fillProgress {
+            from { stroke-dashoffset: 880; }
+            to { stroke-dashoffset: 176; } /* 80% от 880 */
+        }
+        .progress-circle {
+            stroke-dasharray: 880;
+            stroke-dashoffset: 880;
+        }
+        .progress-circle.animated {
+            animation: fillProgress 2s ease-out forwards;
+        }
+
+        /* Градиентный текст */
+        .text-gradient {
+            background: linear-gradient(to right, #34d399, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-brand-500 selection:text-white">
+
+    <nav class="fixed w-full z-50 glass-panel border-b border-white/10 transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0 flex items-center gap-3">
+                    <i class="fa-solid fa-brain text-brand-500 text-2xl"></i>
+                    <span class="font-heading font-bold text-xl tracking-tight">ExamStress</span>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-8">
+                        <a href="#hero" class="hover:text-brand-400 text-sm font-medium transition-colors">Главная</a>
+                        <a href="#theory" class="hover:text-brand-400 text-sm font-medium transition-colors">Теория</a>
+                        <a href="#research" class="hover:text-brand-400 text-sm font-medium transition-colors">Исследование</a>
+                        <a href="#advice" class="hover:text-brand-400 text-sm font-medium transition-colors">Рекомендации</a>
+                    </div>
+                </div>
+                <!-- Мобильное меню (Гамбургер) -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-btn" class="text-gray-300 hover:text-white focus:outline-none">
+                        <i class="fa-solid fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Выпадающее мобильное меню -->
+        <div id="mobile-menu" class="hidden md:hidden bg-dark-800 border-b border-white/10">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#hero" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-dark-900">Главная</a>
+                <a href="#theory" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-dark-900">Теория</a>
+                <a href="#research" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-dark-900">Исследование</a>
+                <a href="#advice" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-dark-900">Рекомендации</a>
+            </div>
+        </div>
+    </nav>
+
+    <section id="hero" class="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden">
+        <!-- Декоративные фоновые элементы -->
+        <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-brand-500/20 rounded-full blur-[100px] -z-10"></div>
+        <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-500/20 rounded-full blur-[100px] -z-10"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+            <div class="inline-block mb-4 px-4 py-1.5 rounded-full border border-brand-500/30 bg-brand-500/10 text-brand-400 font-medium text-sm tracking-wide uppercase reveal">
+                Индивидуальный исследовательский проект
+            </div>
+            <h1 class="text-5xl md:text-7xl font-heading font-extrabold tracking-tight mb-6 reveal delay-100">
+                Влияние <span class="text-gradient">стресса</span> на<br> 
+                работоспособность на экзамене
+            </h1>
+            <p class="mt-4 text-xl text-gray-400 max-w-3xl mx-auto mb-10 reveal delay-200">
+                Как экзаменационный стресс влияет на когнитивные способности студентов и какие существуют эффективные методы борьбы с ним.
+            </p>
+            
+            <div class="flex flex-col sm:flex-row gap-4 justify-center items-center reveal delay-300">
+                <!-- РАБОТАЮЩАЯ КНОПКА ПЕРЕХОДА К РЕЗУЛЬТАТАМ -->
+                <a href="#research" class="group relative px-8 py-4 bg-brand-500 hover:bg-brand-400 text-white font-semibold rounded-xl shadow-[0_0_20px_rgba(16,185,129,0.3)] transition-all overflow-hidden flex items-center gap-3 w-full sm:w-auto justify-center">
+                    <span class="relative z-10">Перейти к результатам</span>
+                    <i class="fa-solid fa-arrow-right relative z-10 group-hover:translate-x-1 transition-transform"></i>
+                    <div class="absolute inset-0 bg-gradient-to-r from-brand-600 to-brand-400 opacity-0 group-hover:opacity-100 transition-opacity z-0"></div>
+                </a>
+                
+                <a href="#theory" class="px-8 py-4 bg-dark-800 hover:bg-dark-700 text-white font-semibold rounded-xl border border-white/10 transition-all flex items-center gap-3 w-full sm:w-auto justify-center">
+                    Изучить теорию
+                </a>
+            </div>
+
+            <!-- Инфо об авторах -->
+            <div class="mt-20 grid grid-cols-1 md:grid-cols-2 gap-8 max-w-2xl mx-auto text-left glass-panel p-6 rounded-2xl reveal delay-300">
+                <div class="flex items-start gap-4">
+                    <div class="w-12 h-12 rounded-full bg-dark-900 flex items-center justify-center text-brand-400 border border-white/10 shrink-0">
+                        <i class="fa-solid fa-user-graduate text-xl"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-400 uppercase tracking-wider mb-1">Выполнил студент</p>
+                        <p class="font-heading font-semibold text-lg text-white">Самодов Георгий (Т-15)</p>
+                        <p class="text-sm text-brand-400 mt-1">Новгородский строительный колледж</p>
+                    </div>
+                </div>
+                <div class="flex items-start gap-4">
+                    <div class="w-12 h-12 rounded-full bg-dark-900 flex items-center justify-center text-blue-400 border border-white/10 shrink-0">
+                        <i class="fa-solid fa-chalkboard-user text-xl"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-400 uppercase tracking-wider mb-1">Руководитель</p>
+                        <p class="font-heading font-semibold text-lg text-white">Строк Е. В.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Индикатор скролла -->
+        <a href="#theory" class="absolute bottom-8 left-1/2 -translate-x-1/2 text-gray-500 hover:text-white transition-colors animate-bounce">
+            <i class="fa-solid fa-chevron-down text-2xl"></i>
+        </a>
+    </section>
+
+    <section id="theory" class="py-24 bg-dark-950 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 reveal">
+                <h2 class="text-brand-500 font-semibold tracking-wide uppercase mb-2">Глава 1. Теоретический анализ</h2>
+                <h3 class="text-3xl md:text-5xl font-heading font-bold">Природа экзаменационного стресса</h3>
+            </div>
+
+            <!-- Эустресс vs Дистресс -->
+            <div class="grid md:grid-cols-2 gap-8 mb-20">
+                <div class="glass-panel p-8 rounded-3xl border-t-4 border-t-blue-500 hover:-translate-y-2 transition-transform duration-300 reveal">
+                    <div class="w-16 h-16 rounded-2xl bg-blue-500/20 flex items-center justify-center mb-6">
+                        <i class="fa-solid fa-bolt-lightning text-3xl text-blue-400"></i>
+                    </div>
+                    <h4 class="text-2xl font-heading font-bold mb-4">Эустресс</h4>
+                    <p class="text-gray-400 leading-relaxed text-lg">
+                        Конструктивный, «хороший» стресс. Он стимулирует активность, повышает концентрацию внимания, мобилизует ресурсы организма и усиливает мотивацию к достижению цели. Помогает собраться в критической ситуации.
+                    </p>
+                </div>
+                <div class="glass-panel p-8 rounded-3xl border-t-4 border-t-red-500 hover:-translate-y-2 transition-transform duration-300 reveal delay-100">
+                    <div class="w-16 h-16 rounded-2xl bg-red-500/20 flex items-center justify-center mb-6">
+                        <i class="fa-solid fa-skull-crossbones text-3xl text-red-400"></i>
+                    </div>
+                    <h4 class="text-2xl font-heading font-bold mb-4">Дистресс</h4>
+                    <p class="text-gray-400 leading-relaxed text-lg">
+                        Деструктивный, разрушительный стресс. Возникает при перегрузке нервной системы. Снижает производительность, блокирует память, ухудшает общее самочувствие и может привести к панике на экзамене.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Факторы и Влияние на мозг -->
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                <div class="reveal">
+                    <h4 class="text-2xl font-heading font-bold mb-8 flex items-center gap-3">
+                        <i class="fa-solid fa-triangle-exclamation text-brand-500"></i>
+                        Ключевые факторы стресса
+                    </h4>
+                    <ul class="space-y-6">
+                        <li class="flex gap-4 items-start glass-panel p-4 rounded-xl">
+                            <div class="bg-dark-900 p-3 rounded-lg text-brand-400 mt-1"><i class="fa-solid fa-eye"></i></div>
+                            <div>
+                                <strong class="text-white text-lg block mb-1">Страх оценки</strong>
+                                <span class="text-gray-400">Боязнь не оправдать ожидания преподавателей, родителей и собственные амбиции.</span>
+                            </div>
+                        </li>
+                        <li class="flex gap-4 items-start glass-panel p-4 rounded-xl">
+                            <div class="bg-dark-900 p-3 rounded-lg text-brand-400 mt-1"><i class="fa-solid fa-hourglass-half"></i></div>
+                            <div>
+                                <strong class="text-white text-lg block mb-1">Дефицит времени</strong>
+                                <span class="text-gray-400">Жесткие временные рамки при подготовке и на самом экзамене вызывают сильную тревогу.</span>
+                            </div>
+                        </li>
+                        <li class="flex gap-4 items-start glass-panel p-4 rounded-xl">
+                            <div class="bg-dark-900 p-3 rounded-lg text-brand-400 mt-1"><i class="fa-solid fa-circle-question"></i></div>
+                            <div>
+                                <strong class="text-white text-lg block mb-1">Неуверенность</strong>
+                                <span class="text-gray-400">Ощущение пробелов в знаниях и страх вытянуть "несчастливый билет".</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="relative reveal delay-200 group">
+                    <!-- Иллюстрация влияния на мозг -->
+                    <div class="absolute inset-0 bg-gradient-to-tr from-brand-600/20 to-transparent rounded-3xl blur-2xl group-hover:blur-3xl transition-all"></div>
+                    <div class="glass-panel p-8 rounded-3xl relative z-10 border border-brand-500/20">
+                        <h4 class="text-2xl font-heading font-bold mb-6 text-center">Влияние на когнитивные функции</h4>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="bg-dark-900/80 p-4 rounded-2xl text-center border border-white/5">
+                                <i class="fa-solid fa-brain text-red-400 text-3xl mb-3 block"></i>
+                                <span class="text-sm text-gray-300">Блокировка кратковременной памяти</span>
+                            </div>
+                            <div class="bg-dark-900/80 p-4 rounded-2xl text-center border border-white/5">
+                                <i class="fa-solid fa-eye-slash text-orange-400 text-3xl mb-3 block"></i>
+                                <span class="text-sm text-gray-300">Снижение концентрации внимания</span>
+                            </div>
+                            <div class="bg-dark-900/80 p-4 rounded-2xl text-center border border-white/5">
+                                <i class="fa-solid fa-battery-quarter text-yellow-400 text-3xl mb-3 block"></i>
+                                <span class="text-sm text-gray-300">Быстрое истощение нервной системы</span>
+                            </div>
+                            <div class="bg-dark-900/80 p-4 rounded-2xl text-center border border-white/5">
+                                <i class="fa-solid fa-xmark text-red-500 text-3xl mb-3 block"></i>
+                                <span class="text-sm text-gray-300">Резкий рост количества ошибок</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="research" class="py-24 relative overflow-hidden">
+        <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center mb-16 reveal">
+                <h2 class="text-brand-500 font-semibold tracking-wide uppercase mb-2">Глава 2. Практическая часть</h2>
+                <h3 class="text-3xl md:text-5xl font-heading font-bold">Анализ анкетирования группы Т-15</h3>
+                <p class="mt-4 text-gray-400 max-w-2xl mx-auto">Исследование проводилось на базе 20 студентов для выявления реального уровня дистресса в период сессии.</p>
+            </div>
+
+            <div class="grid lg:grid-cols-3 gap-8">
+                <!-- Главная статистика: Круговой прогресс -->
+                <div class="lg:col-span-1 glass-panel p-8 rounded-3xl flex flex-col items-center justify-center text-center reveal">
+                    <h4 class="text-xl font-medium text-gray-300 mb-8">Студентов в зоне риска</h4>
+                    
+                    <div class="relative w-48 h-48 mb-6">
+                        <!-- SVG Круг -->
+                        <svg class="w-full h-full transform -rotate-90" viewBox="0 0 300 300">
+                            <!-- Фоновый круг -->
+                            <circle cx="150" cy="150" r="140" fill="none" stroke="#1e293b" stroke-width="20" />
+                            <!-- Заполняющийся круг (80%) -->
+                            <circle cx="150" cy="150" r="140" fill="none" stroke="#ef4444" stroke-width="20" stroke-linecap="round" class="progress-circle" />
+                        </svg>
+                        <div class="absolute inset-0 flex items-center justify-center flex-col">
+                            <span class="text-6xl font-bold text-white">80<span class="text-3xl">%</span></span>
+                        </div>
+                    </div>
+                    
+                    <p class="text-gray-400">
+                        <strong class="text-white">16 из 20 опрошенных</strong> подтвердили наличие сильного дистресса, мешающего сдать экзамен на желаемый балл.
+                    </p>
+                </div>
+
+                <!-- График симптомов -->
+                <div class="lg:col-span-2 glass-panel p-8 rounded-3xl reveal delay-100">
+                    <h4 class="text-xl font-medium text-gray-300 mb-8">Основные симптомы (Частота проявления)</h4>
+                    
+                    <div class="h-64 flex items-end justify-between gap-2 sm:gap-6 border-b border-white/10 pb-4 relative">
+                        <!-- Линии сетки -->
+                        <div class="absolute inset-x-0 bottom-1/4 border-b border-white/5 border-dashed"></div>
+                        <div class="absolute inset-x-0 bottom-2/4 border-b border-white/5 border-dashed"></div>
+                        <div class="absolute inset-x-0 bottom-3/4 border-b border-white/5 border-dashed"></div>
+
+                        <!-- Столбцы -->
+                        <div class="w-full group relative flex flex-col items-center justify-end h-full">
+                            <div class="absolute -top-8 opacity-0 group-hover:opacity-100 transition-opacity bg-dark-800 px-3 py-1 rounded text-sm font-bold text-red-400">90%</div>
+                            <div class="w-full bg-gradient-to-t from-red-900/50 to-red-500 rounded-t-lg transition-all duration-1000 h-0" data-height="90%"></div>
+                            <span class="absolute -bottom-10 text-xs sm:text-sm text-gray-400 text-center w-full leading-tight">Тревожность</span>
+                        </div>
+                        
+                        <div class="w-full group relative flex flex-col items-center justify-end h-full">
+                            <div class="absolute -top-8 opacity-0 group-hover:opacity-100 transition-opacity bg-dark-800 px-3 py-1 rounded text-sm font-bold text-blue-400">75%</div>
+                            <div class="w-full bg-gradient-to-t from-blue-900/50 to-blue-500 rounded-t-lg transition-all duration-1000 h-0 delay-100" data-height="75%"></div>
+                            <span class="absolute -bottom-10 text-xs sm:text-sm text-gray-400 text-center w-full leading-tight">Сон</span>
+                        </div>
+
+                        <div class="w-full group relative flex flex-col items-center justify-end h-full">
+                            <div class="absolute -top-8 opacity-0 group-hover:opacity-100 transition-opacity bg-dark-800 px-3 py-1 rounded text-sm font-bold text-purple-400">60%</div>
+                            <div class="w-full bg-gradient-to-t from-purple-900/50 to-purple-500 rounded-t-lg transition-all duration-1000 h-0 delay-200" data-height="60%"></div>
+                            <span class="absolute -bottom-10 text-xs sm:text-sm text-gray-400 text-center w-full leading-tight">Память</span>
+                        </div>
+
+                        <div class="w-full group relative flex flex-col items-center justify-end h-full">
+                            <div class="absolute -top-8 opacity-0 group-hover:opacity-100 transition-opacity bg-dark-800 px-3 py-1 rounded text-sm font-bold text-yellow-400">45%</div>
+                            <div class="w-full bg-gradient-to-t from-yellow-900/50 to-yellow-500 rounded-t-lg transition-all duration-1000 h-0 delay-300" data-height="45%"></div>
+                            <span class="absolute -bottom-10 text-xs sm:text-sm text-gray-400 text-center w-full leading-tight">Усталость</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Таблица выводов -->
+            <div class="mt-16 glass-panel rounded-3xl overflow-hidden reveal delay-200">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-dark-800/80">
+                                <th class="p-6 font-semibold text-white">Показатель тестирования</th>
+                                <th class="p-6 font-semibold text-white">Среднее значение</th>
+                                <th class="p-6 font-semibold text-white">Статус / Вывод</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-white/10">
+                            <tr class="hover:bg-white/5 transition-colors">
+                                <td class="p-6 text-gray-300 flex items-center gap-3"><i class="fa-solid fa-heart-pulse text-red-400"></i> Средний балл тревожности</td>
+                                <td class="p-6 text-white font-medium">8 из 10 баллов</td>
+                                <td class="p-6 text-red-400 font-bold bg-red-500/10">Превышение нормы</td>
+                            </tr>
+                            <tr class="hover:bg-white/5 transition-colors">
+                                <td class="p-6 text-gray-300 flex items-center gap-3"><i class="fa-solid fa-users text-orange-400"></i> Студенты с высоким стрессом</td>
+                                <td class="p-6 text-white font-medium">80% (16 человек)</td>
+                                <td class="p-6 text-orange-400 font-bold bg-orange-500/10">Критично</td>
+                            </tr>
+                            <tr class="hover:bg-white/5 transition-colors">
+                                <td class="p-6 text-gray-300 flex items-center gap-3"><i class="fa-solid fa-file-contract text-brand-400"></i> Влияние на результаты пробного теста</td>
+                                <td class="p-6 text-white font-medium">Снижение балла на 15-20%</td>
+                                <td class="p-6 text-yellow-400 font-bold bg-yellow-500/10">Требует коррекции</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="advice" class="py-24 bg-dark-950 border-t border-white/5">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 reveal">
+                <h2 class="text-brand-500 font-semibold tracking-wide uppercase mb-2">Практические советы</h2>
+                <h3 class="text-3xl md:text-5xl font-heading font-bold mb-6">Как управлять стрессом?</h3>
+            </div>
+
+            <!-- Карточки советов -->
+            <div class="grid md:grid-cols-3 gap-6 mb-20">
+                <div class="glass-panel p-8 rounded-3xl reveal hover:bg-dark-800 transition-colors group">
+                    <div class="w-14 h-14 rounded-full bg-brand-500/20 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-wind text-2xl text-brand-400"></i>
+                    </div>
+                    <h4 class="text-xl font-bold mb-3 text-white">Релаксация</h4>
+                    <p class="text-gray-400 text-sm leading-relaxed">Дыхательные упражнения (квадратное дыхание), медитация и легкая йога перед сном эффективно снижают уровень кортизола в крови.</p>
+                </div>
+                
+                <div class="glass-panel p-8 rounded-3xl reveal delay-100 hover:bg-dark-800 transition-colors group">
+                    <div class="w-14 h-14 rounded-full bg-blue-500/20 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-bed text-2xl text-blue-400"></i>
+                    </div>
+                    <h4 class="text-xl font-bold mb-3 text-white">Гигиена сна</h4>
+                    <p class="text-gray-400 text-sm leading-relaxed">Обеспечьте минимум 7-8 часов сна. Категорический отказ от гаджетов, соцсетей и конспектов за час до отдыха для восстановления нейронных связей.</p>
+                </div>
+
+                <div class="glass-panel p-8 rounded-3xl reveal delay-200 hover:bg-dark-800 transition-colors group">
+                    <div class="w-14 h-14 rounded-full bg-purple-500/20 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-list-check text-2xl text-purple-400"></i>
+                    </div>
+                    <h4 class="text-xl font-bold mb-3 text-white">Планирование</h4>
+                    <p class="text-gray-400 text-sm leading-relaxed">Разбивайте сложный материал на мелкие, выполнимые задачи. Используйте методы тайм-менеджмента, например, технику Помодоро (25 мин работа / 5 мин отдых).</p>
+                </div>
+            </div>
+
+            <!-- Стратегия подготовки (Timeline) -->
+            <div class="glass-panel rounded-3xl p-8 md:p-12 reveal">
+                <h4 class="text-2xl font-heading font-bold mb-10 text-center">Оптимальная стратегия подготовки</h4>
+                
+                <div class="relative max-w-4xl mx-auto">
+                    <!-- Линия соединяющая шаги (скрыта на мобильных) -->
+                    <div class="hidden md:block absolute top-1/2 left-0 right-0 h-1 bg-dark-700 -translate-y-1/2 z-0"></div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-8 relative z-10">
+                        <!-- Шаг 1 -->
+                        <div class="flex flex-col items-center text-center">
+                            <div class="w-16 h-16 rounded-full bg-dark-900 border-4 border-brand-500 flex items-center justify-center text-xl font-bold text-white mb-4 shadow-[0_0_15px_rgba(16,185,129,0.4)]">01</div>
+                            <h5 class="text-lg font-bold text-white mb-2">Обзор</h5>
+                            <p class="text-sm text-gray-400">Оценка общего объема материала и расстановка приоритетов.</p>
+                        </div>
+                        <!-- Шаг 2 -->
+                        <div class="flex flex-col items-center text-center">
+                            <div class="w-16 h-16 rounded-full bg-dark-900 border-4 border-brand-500 flex items-center justify-center text-xl font-bold text-white mb-4 shadow-[0_0_15px_rgba(16,185,129,0.4)]">02</div>
+                            <h5 class="text-lg font-bold text-white mb-2">График</h5>
+                            <p class="text-sm text-gray-400">Распределение сложных и легких тем по дням с учетом биоритмов.</p>
+                        </div>
+                        <!-- Шаг 3 -->
+                        <div class="flex flex-col items-center text-center">
+                            <div class="w-16 h-16 rounded-full bg-dark-900 border-4 border-brand-500 flex items-center justify-center text-xl font-bold text-white mb-4 shadow-[0_0_15px_rgba(16,185,129,0.4)]">03</div>
+                            <h5 class="text-lg font-bold text-white mb-2">Повторение</h5>
+                            <p class="text-sm text-gray-400">Интервальное повторение. Закрепление изученного через 24 часа.</p>
+                        </div>
+                        <!-- Шаг 4 -->
+                        <div class="flex flex-col items-center text-center">
+                            <div class="w-16 h-16 rounded-full bg-brand-500 flex items-center justify-center text-xl font-bold text-dark-900 mb-4 shadow-[0_0_20px_rgba(16,185,129,0.6)]"><i class="fa-solid fa-check"></i></div>
+                            <h5 class="text-lg font-bold text-brand-400 mb-2">Успех</h5>
+                            <p class="text-sm text-gray-400">Уверенная сдача экзамена без разрушительного дистресса.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-dark-900 border-t border-white/5 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <i class="fa-solid fa-graduation-cap text-4xl text-brand-500 mb-6"></i>
+            <h2 class="text-3xl font-heading font-bold text-white mb-4">Спасибо за внимание!</h2>
+            <p class="text-gray-400 text-lg mb-8 max-w-xl mx-auto">Надеюсь, данные исследования и рекомендации помогут студентам лучше справляться со стрессом.</p>
+            
+            <div class="inline-block text-left bg-dark-800 p-6 rounded-2xl border border-white/5">
+                <p class="text-sm text-gray-400 mb-2">Автор проекта:</p>
+                <p class="text-white font-medium mb-1">Самодов Георгий Владимирович (Т-15)</p>
+                <p class="text-brand-400 text-sm">ОГБПОУ «НОВГОРОДСКИЙ СТРОИТЕЛЬНЫЙ КОЛЛЕДЖ», 2026</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. Управление мобильным меню
+            const btn = document.getElementById('mobile-menu-btn');
+            const menu = document.getElementById('mobile-menu');
+            const menuLinks = menu.querySelectorAll('a');
+
+            btn.addEventListener('click', () => {
+                menu.classList.toggle('hidden');
+            });
+
+            menuLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    menu.classList.add('hidden');
+                });
+            });
+
+            // 2. Изменение прозрачности Navbar при скролле
+            const navbar = document.getElementById('navbar');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    navbar.classList.add('bg-slate-900/90', 'shadow-lg');
+                    navbar.classList.remove('bg-slate-900/80');
+                } else {
+                    navbar.classList.remove('bg-slate-900/90', 'shadow-lg');
+                    navbar.classList.add('bg-slate-900/80');
+                }
+            });
+
+            // 3. Intersection Observer для анимаций появления (.reveal)
+            const revealElements = document.querySelectorAll('.reveal');
+            
+            const revealCallback = (entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        
+                        // Если в блоке есть прогресс-круг, запускаем его анимацию
+                        const circle = entry.target.querySelector('.progress-circle');
+                        if (circle) circle.classList.add('animated');
+
+                        // Если в блоке есть столбцы графика, анимируем их высоту
+                        const bars = entry.target.querySelectorAll('[data-height]');
+                        bars.forEach(bar => {
+                            setTimeout(() => {
+                                bar.style.height = bar.getAttribute('data-height');
+                            }, 300); // Небольшая задержка после появления блока
+                        });
+
+                        observer.unobserve(entry.target); // Анимируем только один раз
+                    }
+                });
+            };
+
+            const revealOptions = {
+                threshold: 0.15,
+                rootMargin: "0px 0px -50px 0px"
+            };
+
+            const revealObserver = new IntersectionObserver(revealCallback, revealOptions);
+            
+            revealElements.forEach(el => {
+                revealObserver.observe(el);
+            });
+        });
+    </script>
+</body>
+</html>

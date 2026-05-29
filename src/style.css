@@ -1,0 +1,51 @@
+
+:root {
+font-family: 'Inter', system-ui, -apple-system, sans-serif;
+line-height: 1.5;
+font-weight: 400;
+background-color: #f8fafc;
+}
+
+body, #app {
+margin: 0;
+padding: 0;
+width: 100%;
+min-height: 100vh;
+display: block !important; 
+text-align: left !important;
+}
+
+
+
+
+.glass {
+background: rgba(255, 255, 255, 0.7) !important;
+backdrop-filter: blur(12px) !important;
+-webkit-backdrop-filter: blur(12px) !important;
+border: 1px solid rgba(255, 255, 255, 0.3) !important;
+}
+
+
+html {
+scroll-behavior: smooth;
+}
+
+
+@keyframes fadeInUp {
+from {
+opacity: 0;
+transform: translateY(20px);
+}
+to {
+opacity: 1;
+transform: translateY(0);
+}
+}
+
+.animate-fade-in {
+animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+button {
+transition: all 0.2s ease-in-out !important;
+}
