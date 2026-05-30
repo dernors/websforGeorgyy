@@ -1,15 +1,13 @@
-// Ждем полной загрузки DOM, прежде чем рисовать графики
 document.addEventListener('DOMContentLoaded', () => {
     
-    // Функция переключения страниц теперь гарантированно работает
     window.switchPage = function(pageId) {
-        const pages = ['home', 'theory', 'research', 'tips'];
+        // ДОБАВЛЕНА НОВАЯ СТРАНИЦА 'materials' В МАССИВ
+        const pages = ['home', 'theory', 'research', 'tips', 'materials'];
         
         pages.forEach(id => {
             const el = document.getElementById(`page-${id}`);
             if (id === pageId) {
                 el.classList.remove('hidden');
-                // Даем время на отрисовку перед изменением прозрачности
                 setTimeout(() => {
                     el.classList.add('opacity-100');
                     el.classList.remove('opacity-0');
@@ -21,7 +19,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // Навигация скрыта только на главной
         const nav = document.getElementById('site-nav');
         if (pageId === 'home') {
             nav.classList.add('hidden');
@@ -32,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // РИСУЕМ ГРАФИКИ СРАЗУ
+    // Отрисовка графиков
     const ctx1 = document.getElementById('chart1').getContext('2d');
     new Chart(ctx1, {
         type: 'doughnut',
@@ -45,10 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 hoverOffset: 20
             }]
         },
-        options: {
-            maintainAspectRatio: false,
-            plugins: { legend: { position: 'bottom' } }
-        }
+        options: { maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
     });
 
     const ctx2 = document.getElementById('chart2').getContext('2d');
@@ -63,9 +57,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 borderRadius: 12
             }]
         },
-        options: {
-            maintainAspectRatio: false,
-            scales: { y: { beginAtZero: true, max: 20 } }
-        }
+        options: { maintainAspectRatio: false, scales: { y: { beginAtZero: true, max: 20 } } }
     });
 });

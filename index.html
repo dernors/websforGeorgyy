@@ -1,254 +1,202 @@
 <!DOCTYPE html>
-<html lang="ru" class="scroll-smooth">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ExamStress | Проект Георгия Самодова</title>
+    <title>Исследовательский проект</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        body { font-family: 'Inter', sans-serif; }
-        .glass { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
-        .reveal { opacity: 0; transform: translateY(30px); transition: all 0.6s ease-out; }
-        .reveal.active { opacity: 1; transform: translateY(0); }
-        .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 24px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15); }
+        body { font-family: 'Inter', sans-serif; overflow-x: hidden; }
+        .glass { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.3); }
+        .blob { position: absolute; border-radius: 50%; filter: blur(60px); z-index: -1; opacity: 0.4; }
+        .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 24px; box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.1); }
         .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-900">
+<body class="bg-slate-50 text-slate-900 min-h-screen">
 
-    <nav class="fixed top-0 w-full z-50 glass border-b border-slate-200">
-        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-            <span class="font-black text-emerald-600 tracking-tighter text-xl">STRESS.PRO</span>
-            <div class="hidden md:flex gap-8 text-sm font-bold">
-                <a href="#hero" class="hover:text-emerald-600 transition">Главная</a>
-                <a href="#theory" class="hover:text-emerald-600 transition">Теория</a>
-                <a href="#research" class="hover:text-emerald-600 transition">Данные</a>
-                <a href="#video" class="hover:text-emerald-600 transition">Видео</a>
-                <a href="#resources" class="hover:text-emerald-600 transition">Источники</a>
+    <div class="blob w-96 h-96 bg-emerald-300 top-[-10%] left-[-10%]"></div>
+    <div class="blob w-80 h-80 bg-blue-300 bottom-[10%] right-[-5%]"></div>
+    <div class="blob w-64 h-64 bg-purple-200 top-[20%] right-[10%]"></div>
+
+    <nav id="site-nav" class="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-5xl glass rounded-2xl shadow-xl hidden">
+        <div class="px-8 py-4 flex flex-wrap justify-between items-center gap-4">
+            <span class="font-black text-emerald-600 tracking-tighter text-xl">STRESS.LAB</span>
+            <div class="flex flex-wrap gap-4 md:gap-8">
+                <button onclick="switchPage('home')" class="text-sm font-bold hover:text-emerald-600 transition">Главная</button>
+                <button onclick="switchPage('theory')" class="text-sm font-bold hover:text-emerald-600 transition">Теория</button>
+                <button onclick="switchPage('research')" class="text-sm font-bold hover:text-emerald-600 transition">Исследование</button>
+                <button onclick="switchPage('tips')" class="text-sm font-bold hover:text-emerald-600 transition">Советы</button>
+                <button onclick="switchPage('materials')" class="text-sm font-bold text-emerald-600 hover:text-emerald-800 transition">Материалы</button>
             </div>
         </div>
     </nav>
 
-    <section id="hero" class="min-h-screen flex items-center justify-center pt-20 px-6">
-        <div class="max-w-6xl w-full grid lg:grid-cols-2 gap-12 items-center">
-            <div class="space-y-6 reveal active">
-                <p class="text-xs font-bold text-emerald-600 uppercase tracking-widest">Проект Т-15 / 2026</p>
-                <h1 class="text-6xl md:text-8xl font-black tracking-tighter leading-none">Стресс на <br><span class="text-emerald-500">экзамене.</span></h1>
-                <p class="text-lg text-slate-500 leading-relaxed">Исследование психологических реакций и работоспособности студентов строительного колледжа.</p>
-                <div class="flex gap-4">
-                    <a href="#research" class="bg-emerald-600 text-white px-8 py-4 rounded-2xl font-bold shadow-xl shadow-emerald-200 hover:bg-emerald-700 transition">Смотреть графики</a>
-                    <a href="#video" class="glass px-8 py-4 rounded-2xl font-bold hover:bg-white transition">Слушать эксперта</a>
+    <main>
+        <section id="page-home" class="min-h-screen flex items-center justify-center px-6 relative">
+            <div class="max-w-6xl w-full grid lg:grid-cols-2 gap-12 items-center">
+                <div class="space-y-8 text-left">
+                    <div class="inline-flex items-center gap-2 bg-white/50 px-4 py-2 rounded-full border border-white">
+                        <span class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>
+                        <span class="text-xs font-bold text-slate-500 uppercase tracking-widest">Проектная деятельность 2026</span>
+                    </div>
+                    <h1 class="text-6xl md:text-8xl font-black tracking-tight text-slate-900 leading-[0.9]">
+                        Стресс на <br><span class="text-emerald-600">экзамене.</span>
+                    </h1>
+                    <p class="text-xl text-slate-500 max-w-lg leading-relaxed">
+                        Исследование влияния психоэмоционального напряжения на работоспособность студентов группы Т-15.
+                    </p>
+                    <div class="flex flex-wrap gap-4 pt-4">
+                        <button onclick="switchPage('research')" class="bg-emerald-600 text-white px-8 py-4 rounded-2xl font-bold hover:bg-emerald-700 transition-all shadow-xl shadow-emerald-200 cursor-pointer">
+                            Результаты
+                        </button>
+                        <button onclick="switchPage('materials')" class="glass px-8 py-4 rounded-2xl font-bold hover:bg-white transition-all cursor-pointer">
+                            Смотреть видео
+                        </button>
+                    </div>
                 </div>
-            </div>
-            <div class="hidden lg:block reveal delay-100 active">
-                <div class="bg-slate-900 text-white p-10 rounded-[3rem] shadow-2xl space-y-6">
-                    <p class="text-xs uppercase font-bold text-slate-400">Исполнитель:</p>
-                    <p class="text-3xl font-black">Самодов Георгий</p>
-                    <p class="text-sm text-emerald-400">НОВГОРОДСКИЙ СТРОИТЕЛЬНЫЙ КОЛЛЕДЖ</p>
-                    <div class="h-px bg-slate-800 w-full"></div>
-                    <p class="text-xs text-slate-500 italic">"Дистресс снижает производительность труда и ухудшает качество жизнедеятельности..."</p>
-                </div>
-            </div>
-        </div>
-    </section>
 
-    <section id="theory" class="py-32 px-6 bg-white">
-        <div class="max-w-5xl mx-auto space-y-16">
-            <div class="reveal">
-                <h2 class="text-4xl font-black mb-8">Введение в <span class="text-emerald-500">проблематику</span></h2>
-                <div class="grid md:grid-cols-2 gap-12 text-slate-600 leading-relaxed">
-                    <p>Экзаменационная сессия традиционно сопровождается высоким уровнем стресса. Чрезмерное напряжение негативно влияет на память, концентрацию внимания и общую продуктивность деятельности. Наша цель — изучить эти механизмы.</p>
-                    <div class="p-6 bg-slate-50 rounded-3xl border border-slate-100">
-                        <h4 class="font-bold text-slate-900 mb-2">Объект исследования:</h4>
-                        <p class="text-sm">Психологические и физиологические реакции организма студентов на стрессовую ситуацию экзамена.</p>
+                <div class="hidden lg:grid grid-cols-2 gap-4">
+                    <div class="glass p-8 rounded-[40px] mt-12 space-y-4 shadow-lg rotate-[-3deg]">
+                        <div class="text-3xl">📊</div>
+                        <h4 class="font-bold">Анализ данных</h4>
+                        <p class="text-xs text-slate-400">Результаты опроса 20 студентов колледжа.</p>
+                    </div>
+                    <div class="bg-slate-900 text-white p-8 rounded-[40px] space-y-4 shadow-2xl rotate-[3deg]">
+                        <div class="text-3xl">🧠</div>
+                        <h4 class="font-bold">Когниции</h4>
+                        <p class="text-xs text-slate-400">Как паника блокирует доступ к памяти.</p>
+                    </div>
+                    <div class="glass p-8 rounded-[40px] space-y-4 shadow-lg rotate-[2deg] col-span-2 mx-12">
+                        <p class="text-xs font-bold text-slate-400 uppercase">Исполнитель:</p>
+                        <p class="text-2xl font-black text-slate-800">Георгий Самодов</p>
+                        <p class="text-sm text-emerald-600 font-bold">НОВГОРОДСКИЙ СТРОИТЕЛЬНЫЙ КОЛЛЕДЖ</p>
                     </div>
                 </div>
             </div>
-            <div class="grid md:grid-cols-2 gap-6 reveal">
-                <div class="p-8 bg-emerald-50 rounded-3xl border border-emerald-100">
-                    <h4 class="text-xl font-bold text-emerald-700 mb-2">Эустресс</h4>
-                    <p class="text-sm text-emerald-600">Конструктивный стресс, стимулирующий активность и повышающий мотивацию.</p>
-                </div>
-                <div class="p-8 bg-rose-50 rounded-3xl border border-rose-100">
-                    <h4 class="text-xl font-bold text-rose-700 mb-2">Дистресс</h4>
-                    <p class="text-sm text-rose-600">Деструктивный стресс, снижающий производительность и когнитивные функции.</p>
-                </div>
-            </div>
-        </div>
-    </section>
+        </section>
 
-    <section id="research" class="py-32 px-6 bg-slate-50">
-        <div class="max-w-6xl mx-auto space-y-12">
-            <div class="text-center reveal">
-                <h2 class="text-5xl font-black mb-4">Данные группы Т-15</h2>
-                <p class="text-slate-500 font-bold uppercase tracking-widest text-xs">Анкетирование 20 студентов</p>
+        <section id="page-theory" class="hidden opacity-0 max-w-5xl mx-auto px-6 py-32 space-y-16 transition-opacity duration-500">
+            <h2 class="text-5xl font-black">Введение в проект</h2>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="glass p-10 rounded-3xl space-y-6">
+                    <h3 class="text-2xl font-bold text-emerald-600">Цели и задачи</h3>
+                    <p class="text-slate-600 leading-relaxed italic">«Изучение механизмов влияния стресса на работоспособность студентов и разработка мер по снижению негативных последствий».</p>
+                </div>
+                <div class="space-y-6">
+                    <h3 class="text-2xl font-bold">Гипотеза</h3>
+                    <p class="text-slate-600">Систематизированные методы управления стрессом способны существенно повысить академическую успеваемость.</p>
+                </div>
             </div>
-            <div class="grid lg:grid-cols-2 gap-8 reveal">
-                <div class="bg-white p-10 rounded-[2.5rem] shadow-sm border border-slate-100 h-[450px]">
-                    <h3 class="font-bold mb-6">Уровень тревоги (80% в риске)</h3>
+        </section>
+
+        <section id="page-research" class="hidden opacity-0 max-w-6xl mx-auto px-6 py-32 space-y-12 transition-opacity duration-500">
+            <div class="text-center space-y-4">
+                <h2 class="text-5xl font-black text-slate-900">Результаты анкетирования</h2>
+                <p class="text-emerald-600 font-bold">Выборка: 20 студентов группы Т-15</p>
+            </div>
+            
+            <div class="grid lg:grid-cols-2 gap-12">
+                <div class="glass p-10 rounded-[3rem] h-[450px]">
+                    <h3 class="font-bold text-xl mb-6">Уровень тревоги (%)</h3>
                     <canvas id="chart1"></canvas>
                 </div>
-                <div class="bg-white p-10 rounded-[2.5rem] shadow-sm border border-slate-100 h-[450px]">
-                    <h3 class="font-bold mb-6">Симптомы (частота)</h3>
+                <div class="glass p-10 rounded-[3rem] h-[450px]">
+                    <h3 class="font-bold text-xl mb-6">Основные симптомы</h3>
                     <canvas id="chart2"></canvas>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <section id="video" class="py-32 px-6 bg-white border-t border-slate-100">
-        <div class="max-w-4xl mx-auto space-y-12">
-            <div class="text-center reveal">
-                <h2 class="text-5xl font-black mb-4">Мнение <span class="text-emerald-500">психолога</span></h2>
-                <p class="text-slate-500 italic">Посмотрите практические видео-рекомендации по преодолению предэкзаменационной паники.</p>
-            </div>
-            
-            <div class="video-container reveal">
-                <iframe src="https://vk.com/video_ext.php?oid=-135454514&id=456241790" allow="autoplay; encrypted-media; fullscreen; picture-in-picture;" frameborder="0" allowfullscreen></iframe>
-            </div>
-            
-            <div class="text-center reveal">
-                <a href="https://vkvideo.ru/video-135454514_456241790" target="_blank" class="inline-flex items-center gap-2 bg-slate-100 hover:bg-emerald-50 text-slate-700 hover:text-emerald-600 px-6 py-3 rounded-xl text-sm font-bold transition">
-                    <i class="fa-solid fa-arrow-up-right-from-square"></i> Открыть видео напрямую в VK
-                </a>
-            </div>
-
-            <div class="grid md:grid-cols-2 gap-6 reveal">
-                <div class="flex gap-4 p-6 bg-slate-50 rounded-2xl">
-                    <span class="text-emerald-500 text-2xl font-black">01.</span>
-                    <p class="text-sm font-medium">Важно признать свой страх: тревога — это естественная реакция мозга на неопределенность.</p>
+        <section id="page-tips" class="hidden opacity-0 max-w-5xl mx-auto px-6 py-32 transition-opacity duration-500">
+            <h2 class="text-5xl font-black mb-16 text-center">Как победить <span class="text-emerald-600">дистресс?</span></h2>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="glass p-10 rounded-3xl border-t-4 border-emerald-500">
+                    <h3 class="font-black text-2xl mb-6">Для студентов</h3>
+                    <ul class="space-y-4 text-slate-600">
+                        <li>✅ Чередование учебы и отдыха (50/10)</li>
+                        <li>✅ Дыхательные упражнения (метод квадрата)</li>
+                        <li>✅ Питание и 8-часовой сон</li>
+                    </ul>
                 </div>
-                <div class="flex gap-4 p-6 bg-slate-50 rounded-2xl">
-                    <span class="text-emerald-500 text-2xl font-black">02.</span>
-                    <p class="text-sm font-medium">Замена деструктивного дистресса на полезный эустресс происходит через подготовку и снижение значимости ошибки.</p>
+                <div class="glass p-10 rounded-3xl border-t-4 border-blue-500">
+                    <h3 class="font-black text-2xl mb-6">Для педагогов</h3>
+                    <ul class="space-y-4 text-slate-600">
+                        <li>🎓 Благоприятная атмосфера на занятиях</li>
+                        <li>🎓 Четкое разъяснение структуры экзамена</li>
+                        <li>🎓 Интерактивные формы контроля</li>
+                    </ul>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <section id="resources" class="py-32 px-6 bg-slate-900 text-white">
-        <div class="max-w-5xl mx-auto space-y-16">
-            <div class="reveal">
-                <h2 class="text-5xl font-black mb-4">Информационные <span class="text-emerald-400">ресурсы</span></h2>
-                <p class="text-slate-400 mb-8 text-sm">Научно-методическая база и медиаматериалы, использованные в исследовательском проекте:</p>
-                
-                <div class="grid gap-4">
-                    <a href="https://blog.zabedu.ru/rodsobr/wp-content/uploads/sites/7/2018/01/Китаев-Смык-Психология-стресса.pdf" target="_blank" class="flex items-center justify-between p-6 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 transition group">
-                        <div class="flex gap-4 items-center">
-                            <i class="fa-solid fa-file-pdf text-rose-400 text-xl"></i>
-                            <div>
-                                <p class="text-sm font-bold">Китаев-Смык Л.А. «Психология стресса»</p>
-                                <p class="text-[10px] text-slate-400">Москва: Наука, 2024 &bull; Учебное издание</p>
-                            </div>
-                        </div>
-                        <i class="fa-solid fa-arrow-up-right-from-square text-xs opacity-40 group-hover:opacity-100 transition"></i>
+        <section id="page-materials" class="hidden opacity-0 max-w-5xl mx-auto px-6 py-32 space-y-16 transition-opacity duration-500">
+            <h2 class="text-5xl font-black text-center mb-12">Материалы <span class="text-emerald-600">проекта</span></h2>
+            
+            <div class="glass p-8 md:p-12 rounded-[3rem] space-y-6 border-t-4 border-emerald-500">
+                <h3 class="text-2xl font-bold flex items-center gap-3">
+                    <i class="fa-brands fa-vk text-blue-500"></i> Видеоконсультация
+                </h3>
+                <p class="text-slate-600">Рекомендации по психологической подготовке к экзаменам.</p>
+                <div class="video-container">
+                    <iframe src="https://vk.com/video_ext.php?oid=-135454514&id=456241790" allow="autoplay; encrypted-media; fullscreen; picture-in-picture;" frameborder="0" allowfullscreen></iframe>
+                </div>
+                <div class="text-center pt-4">
+                    <a href="https://vkvideo.ru/video-135454514_456241790" target="_blank" class="inline-flex items-center gap-2 bg-slate-100 hover:bg-white text-slate-700 hover:text-emerald-600 px-6 py-3 rounded-xl text-sm font-bold transition shadow-sm">
+                        <i class="fa-solid fa-arrow-up-right-from-square"></i> Открыть напрямую в VK
                     </a>
+                </div>
+            </div>
 
-                    <div class="flex items-center gap-4 p-6 bg-white/5 border border-white/10 rounded-2xl">
-                        <i class="fa-solid fa-book text-blue-400 text-xl"></i>
+            <div class="glass p-8 md:p-12 rounded-[3rem] space-y-6">
+                <h3 class="text-2xl font-bold flex items-center gap-3">
+                    <i class="fa-solid fa-list text-emerald-500"></i> Информационные ресурсы
+                </h3>
+                <ul class="space-y-3">
+                    <li class="flex items-start gap-4 p-5 bg-white/40 rounded-2xl hover:bg-white transition border border-white/50">
+                        <i class="fa-solid fa-book text-emerald-600 mt-1"></i>
                         <div>
-                            <p class="text-sm font-bold">Леонова А.Б. «Управление стрессом: теория и практика»</p>
-                            <p class="text-[10px] text-slate-400">Санкт-Петербург: Питер, 2024 &bull; Монография</p>
+                            <p class="font-bold text-slate-800 text-sm">Китаев-Смык Л.А. «Психология стресса»</p>
+                            <p class="text-xs text-slate-500">Москва: Наука, 2024.</p>
                         </div>
-                    </div>
-
-                    <a href="https://sdo.mgaps.ru/books/KP5/M6/file/3.pdf" target="_blank" class="flex items-center justify-between p-6 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 transition group">
-                        <div class="flex gap-4 items-center">
-                            <i class="fa-solid fa-file-pdf text-rose-400 text-xl"></i>
-                            <div>
-                                <p class="text-sm font-bold">Щербатых Ю.В. «Психология стресса и методы коррекции»</p>
-                                <p class="text-[10px] text-slate-400">Москва: Академия, 2024 &bull; Научная литература</p>
-                            </div>
+                    </li>
+                    <li class="flex items-start gap-4 p-5 bg-white/40 rounded-2xl hover:bg-white transition border border-white/50">
+                        <i class="fa-solid fa-book text-emerald-600 mt-1"></i>
+                        <div>
+                            <p class="font-bold text-slate-800 text-sm">Леонова А.Б. «Управление стрессом: теория и практика»</p>
+                            <p class="text-xs text-slate-500">Санкт-Петербург: Питер, 2024.</p>
                         </div>
-                        <i class="fa-solid fa-arrow-up-right-from-square text-xs opacity-40 group-hover:opacity-100 transition"></i>
-                    </a>
-
-                    <a href="https://www.e-osnova.ru/PDF/osnova_22_16_11459.pdf" target="_blank" class="flex items-center justify-between p-6 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 transition group">
-                        <div class="flex gap-4 items-center">
-                            <i class="fa-solid fa-file-pdf text-rose-400 text-xl"></i>
-                            <div>
-                                <p class="text-sm font-bold">Хромов А.С. «Экзаменационный стресс: диагностика и профилактика»</p>
-                                <p class="text-[10px] text-slate-400">Новосибирск: Изд. НГУ, 2023 &bull; Практическое руководство</p>
-                            </div>
+                    </li>
+                    <li class="flex items-start gap-4 p-5 bg-white/40 rounded-2xl hover:bg-white transition border border-white/50">
+                        <i class="fa-solid fa-book text-emerald-600 mt-1"></i>
+                        <div>
+                            <p class="font-bold text-slate-800 text-sm">Щербатых Ю.В. «Психология стресса и методы коррекции»</p>
+                            <p class="text-xs text-slate-500">Москва: Академия, 2024.</p>
                         </div>
-                        <i class="fa-solid fa-arrow-up-right-from-square text-xs opacity-40 group-hover:opacity-100 transition"></i>
-                    </a>
-
-                    <a href="https://www.nosu.ru/wp-content/uploads/2025/06/dzhelieva-bydtaeva-zuraeva_sogu.-psihologija-stressa.pdf" target="_blank" class="flex items-center justify-between p-6 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 transition group">
-                        <div class="flex gap-4 items-center">
-                            <i class="fa-solid fa-file-pdf text-rose-400 text-xl"></i>
-                            <div>
-                                <p class="text-sm font-bold">Джелиева З.Т., Будтаева Э.Л., Зураева А.М. «Психология стресса»</p>
-                                <p class="text-[10px] text-slate-400">Владикавказ: Изд. СОГУ, 2024 &bull; Учебно-методическое пособие</p>
-                            </div>
+                    </li>
+                    <li class="flex items-start gap-4 p-5 bg-white/40 rounded-2xl hover:bg-white transition border border-white/50">
+                        <i class="fa-solid fa-book text-emerald-600 mt-1"></i>
+                        <div>
+                            <p class="font-bold text-slate-800 text-sm">Хромов А.С. «Экзаменационный стресс: диагностика и профилактика»</p>
+                            <p class="text-xs text-slate-500">Новосибирск: Издательство НГУ, 2023.</p>
                         </div>
-                        <i class="fa-solid fa-arrow-up-right-from-square text-xs opacity-40 group-hover:opacity-100 transition"></i>
-                    </a>
-
-                    <a href="https://vkvideo.ru/video-135454514_456241790" target="_blank" class="flex items-center justify-between p-6 bg-emerald-500/10 border border-emerald-500/20 rounded-2xl hover:bg-emerald-500/20 transition group">
-                        <div class="flex gap-4 items-center">
-                            <i class="fa-brands fa-vk text-emerald-400 text-xl"></i>
-                            <div>
-                                <p class="text-sm font-bold text-emerald-300">Видеоконсультация: Психологическая подготовка к экзаменам</p>
-                                <p class="text-[10px] text-emerald-400/80">VK Видео &bull; Мультимедийный экспертный материал</p>
-                            </div>
+                    </li>
+                    <li class="flex items-start gap-4 p-5 bg-white/40 rounded-2xl hover:bg-white transition border border-white/50">
+                        <i class="fa-solid fa-book text-emerald-600 mt-1"></i>
+                        <div>
+                            <p class="font-bold text-slate-800 text-sm">Джелиева З.Т., Будтаева Э.Л., Зураева А.М. «Психология стресса»</p>
+                            <p class="text-xs text-slate-500">Учебно-методическое пособие, 2024.</p>
                         </div>
-                        <i class="fa-solid fa-arrow-up-right-from-square text-xs text-emerald-400 opacity-60 group-hover:opacity-100 transition"></i>
-                    </a>
-                </div>
+                    </li>
+                </ul>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <footer class="py-12 text-center text-slate-400 text-xs border-t border-slate-200">
-        &copy; 2026 ОГБПОУ «НОВГОРОДСКИЙ СТРОИТЕЛЬНЫЙ КОЛЛЕДЖ». <br> Разработал Самодов Георгий Владимирович.
-    </footer>
+    </main>
 
-    <script>
-        // Анимации плавного появления блоков при прокрутке
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('active');
-                }
-            });
-        }, { threshold: 0.1 });
-        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-
-        // Логика построения графиков Chart.js
-        document.addEventListener('DOMContentLoaded', () => {
-            const ctx1 = document.getElementById('chart1').getContext('2d');
-            new Chart(ctx1, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Сильный стресс', 'Норма'],
-                    datasets: [{
-                        data: [16, 4],
-                        backgroundColor: ['#f43f5e', '#10b981'],
-                        borderWidth: 0
-                    }]
-                },
-                options: { maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
-            });
-
-            const ctx2 = document.getElementById('chart2').getContext('2d');
-            new Chart(ctx2, {
-                type: 'bar',
-                data: {
-                    labels: ['Тревожность', 'Сон', 'Память', 'Усталость'],
-                    datasets: [{
-                        label: 'Студентов (%)',
-                        data: [90, 75, 60, 45],
-                        backgroundColor: '#6366f1',
-                        borderRadius: 12
-                    }]
-                },
-                options: { maintainAspectRatio: false, scales: { y: { beginAtZero: true, max: 100 } } }
-            });
-        });
-    </script>
+    <script type="module" src="/src/main.js"></script>
 </body>
 </html>
